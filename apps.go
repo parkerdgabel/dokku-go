@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/texm/dokku-go/internal/reports"
+	"github.com/parkerdgabel/dokku-go/internal/reports"
 )
 
 type appManager interface {

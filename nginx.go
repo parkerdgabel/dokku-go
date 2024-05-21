@@ -3,8 +3,9 @@ package dokku
 import (
 	"errors"
 	"fmt"
-	"github.com/texm/dokku-go/internal/reports"
 	"strings"
+
+	"github.com/parkerdgabel/dokku-go/internal/reports"
 )
 
 type nginxManager interface {

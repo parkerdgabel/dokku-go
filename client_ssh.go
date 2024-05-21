@@ -4,14 +4,15 @@ import (
 	"crypto/rsa"
 	"errors"
 	"fmt"
-	"golang.org/x/crypto/ssh"
-	"golang.org/x/crypto/ssh/knownhosts"
 	"io"
 	"net"
 	"os"
 	"path"
 	"strings"
 	"time"
+
+	"golang.org/x/crypto/ssh"
+	"golang.org/x/crypto/ssh/knownhosts"
 )
 
 type SSHClient struct {
@@ -28,6 +29,7 @@ type SSHClientConfig struct {
 	PrivateKey           *rsa.PrivateKey
 	PrivateKeyBytes      []byte
 	PrivateKeyPassphrase []byte
+	User                 string
 
 	// optional, defaults to 5 seconds
 	ConnectionTimeout *time.Duration
@@ -45,7 +47,8 @@ var (
 )
 
 const (
-	sshDokkuUser      = "dokku"
+	SshDokkuUser      = "dokku"
+	SshRootUser       = "root"
 	defaultSSHTimeout = time.Second * 5
 	knownHostsFile    = ".ssh/known_hosts"
 )
@@ -92,9 +95,14 @@ func NewSSHClient(cfg *SSHClientConfig) (*SSHClient, error) {
 	if cfg.ConnectionTimeout != nil {
 		timeout = *cfg.ConnectionTimeout
 	}
-
+	var user string
+	if cfg.User == "" {
+		user = SshDokkuUser
+	} else {
+		user = cfg.User
+	}
 	sshConfig := &ssh.ClientConfig{
-		User: sshDokkuUser,
+		User: user,
 		Auth: []ssh.AuthMethod{
 			ssh.PublicKeys(signer),
 		},

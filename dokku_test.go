@@ -3,10 +3,11 @@ package dokku
 import (
 	"context"
 	"fmt"
-	"github.com/stretchr/testify/suite"
-	"github.com/texm/dokku-go/internal/testutils"
 	"os/exec"
 	"strings"
+
+	"github.com/parkerdgabel/dokku-go/internal/testutils"
+	"github.com/stretchr/testify/suite"
 )
 
 type dokkuTestSuite struct {
@@ -105,19 +106,25 @@ func (s *dokkuTestSuite) CreateTestClient(ctx context.Context, admin bool) error
 	}
 
 	keyName := "test"
+	user := "dokku"
+	privateKey := keyPair.PrivateKey
 	if admin {
-		keyName = "admin"
-	}
-
-	if err := s.Dokku.RegisterPublicKey(ctx, keyPair.PublicKey, keyName); err != nil {
+		// if err := s.Dokku.RegisterRootPublicKey(ctx, keyPair.PublicKey); err != nil {
+		// 	return err
+		// }
+		user = "root"
+		privateKey = s.Dokku.RootPrivateKey
+		s.Dokku.RegisterPublicKey(ctx, s.Dokku.RootPublicKey, "admin")
+	} else if err := s.Dokku.RegisterPublicKey(ctx, keyPair.PublicKey, keyName); err != nil {
 		return err
 	}
 
 	cfg := &SSHClientConfig{
 		Host:            s.Dokku.Host,
 		Port:            s.Dokku.SSHPort,
-		PrivateKey:      keyPair.PrivateKey,
+		PrivateKey:      privateKey,
 		HostKeyCallback: s.Dokku.HostKeyFunc(),
+		User:            user,
 	}
 	client, err := NewSSHClient(cfg)
 	if err != nil {

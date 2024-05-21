@@ -1,14 +1,20 @@
 package dokku
 
 import (
-	"github.com/stretchr/testify/suite"
 	"testing"
+
+	"github.com/stretchr/testify/suite"
 )
 
 type domainsManagerTestSuite struct {
 	dokkuTestSuite
 }
 
+func (s *domainsManagerTestSuite) AfterTest(suiteName, testName string) {
+	s.Client.DestroyApp("test-domains-app")
+	s.Client.ClearAppDomains("test-domains-app")
+
+}
 func TestRunDomainsManagerTestSuite(t *testing.T) {
 	suite.Run(t, new(domainsManagerTestSuite))
 }

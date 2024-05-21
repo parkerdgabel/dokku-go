@@ -2,9 +2,10 @@ package dokku
 
 import (
 	"fmt"
-	"github.com/texm/dokku-go/internal/reports"
 	"regexp"
 	"strings"
+
+	"github.com/parkerdgabel/dokku-go/internal/reports"
 )
 
 type proxyManager interface {

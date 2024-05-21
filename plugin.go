@@ -35,7 +35,10 @@ const (
 	pluginInstalledCmd           = "plugin:installed %s"
 	pluginDisableCmd             = "plugin:disable %s"
 	pluginEnableCmd              = "plugin:enable %s"
-	pluginInstallGitCmd          = "plugin:install <git-url> --committish <tag|branch|commit> --name <custom-plugin-name>"
+	pluginInstallFullCmd         = "plugin:install %s --committish %s --name %s"
+	pluginInstallCmd             = "plugin:install %s"
+	pluginInstallWithNameCmd     = "plugin:install %s --name %s"
+	pluginInstallGitCmd          = "plugin:install %s --committish %s"
 	pluginInstallDependenciesCmd = "plugin:install-dependencies"
 	pluginListCmd                = "plugin:list"
 	pluginTriggerCmd             = "plugin:trigger %s"
@@ -64,6 +67,35 @@ func (c *BaseClient) ListPlugins() ([]PluginInfo, error) {
 	}
 
 	return plugins, err
+}
+
+type PluginInstallOptions struct {
+	url        string `dokku:"plugin-url"`
+	committish string `dokku:"committish"`
+	name       string `dokku:"plugin-name"`
+}
+
+func (c *BaseClient) InstallPlugin(options PluginInstallOptions) error {
+	if options.url == "" {
+		return fmt.Errorf("plugin url is required")
+	}
+	if strings.HasPrefix(options.url, "git@") && options.committish != "" {
+		cmd := fmt.Sprintf(pluginInstallGitCmd, options.url, options.committish)
+		_, err := c.Exec(cmd)
+		return err
+	} else if options.committish != "" && options.name != "" {
+		cmd := fmt.Sprintf(pluginInstallFullCmd, options.url, options.committish, options.name)
+		_, err := c.Exec(cmd)
+		return err
+	} else if options.name != "" {
+		cmd := fmt.Sprintf(pluginInstallWithNameCmd, options.url, options.name)
+		_, err := c.Exec(cmd)
+		return err
+	} else {
+		cmd := fmt.Sprintf(pluginInstallCmd, options.url)
+		_, err := c.Exec(cmd)
+		return err
+	}
 }
 
 /*

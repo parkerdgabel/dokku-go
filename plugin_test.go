@@ -1,8 +1,9 @@
 package dokku
 
 import (
-	"github.com/stretchr/testify/suite"
 	"testing"
+
+	"github.com/stretchr/testify/suite"
 )
 
 type pluginManagerTestSuite struct {
@@ -20,4 +21,13 @@ func (s *pluginManagerTestSuite) TestListPlugins() {
 	r.NoError(err)
 	r.NotEmpty(plugins)
 	r.NotEmpty(plugins[0])
+}
+
+func (s *pluginManagerTestSuite) TestInstallPlugin() {
+	r := s.Require()
+
+	// pluginName := "test-plugin"
+	pluginURL := "https://github.com/dokku/dokku-mysql.git"
+	err := s.Client.InstallPlugin(PluginInstallOptions{url: pluginURL})
+	r.NoError(err)
 }

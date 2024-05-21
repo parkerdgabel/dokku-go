@@ -2,8 +2,9 @@ package dokku
 
 import (
 	"context"
-	"github.com/stretchr/testify/suite"
 	"testing"
+
+	"github.com/stretchr/testify/suite"
 )
 
 type gitManagerTestSuite struct {
@@ -37,7 +38,7 @@ func (s *gitManagerTestSuite) TestSyncGitRepo() {
 
 	r.NoError(s.Client.DisableAppDeployChecks(s.DefaultAppName))
 
-	testRepo := "https://github.com/texm/go-hello-world-http.git"
+	testRepo := "https://github.com/parkerdgabel/go-hello-world-http.git"
 	options := &GitSyncOptions{
 		Build:  true,
 		GitRef: "main",

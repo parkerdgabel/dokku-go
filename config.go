@@ -3,9 +3,10 @@ package dokku
 import (
 	b64 "encoding/base64"
 	"fmt"
-	"github.com/texm/dokku-go/internal/reports"
 	"strings"
 	"unicode"
+
+	"github.com/parkerdgabel/dokku-go/internal/reports"
 )
 
 type configManager interface {

@@ -2,7 +2,8 @@ package dokku
 
 import (
 	"fmt"
-	"github.com/texm/dokku-go/internal/reports"
+
+	"github.com/parkerdgabel/dokku-go/internal/reports"
 )
 
 type gitManager interface {

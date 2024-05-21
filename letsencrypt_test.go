@@ -3,9 +3,10 @@ package dokku
 import (
 	"context"
 	"fmt"
-	"github.com/stretchr/testify/suite"
-	"github.com/texm/dokku-go/internal/testutils"
 	"testing"
+
+	"github.com/parkerdgabel/dokku-go/internal/testutils"
+	"github.com/stretchr/testify/suite"
 )
 
 type letsEncryptManagerTestSuite struct {

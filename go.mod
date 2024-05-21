@@ -1,4 +1,4 @@
-module github.com/texm/dokku-go
+module github.com/parkerdgabel/dokku-go
 
 go 1.18
 

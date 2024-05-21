@@ -3,12 +3,12 @@ package testutils
 import (
 	"context"
 	"fmt"
-	"github.com/testcontainers/testcontainers-go"
-	"github.com/testcontainers/testcontainers-go/wait"
 	"os"
-	"path"
 	"runtime"
 	"time"
+
+	"github.com/testcontainers/testcontainers-go"
+	"github.com/testcontainers/testcontainers-go/wait"
 )
 
 const (
@@ -22,7 +22,7 @@ func (l nullLogger) Printf(format string, args ...any) {}
 
 func CreateDokkuContainer(ctx context.Context, withLogs bool) (*DokkuContainer, error) {
 	if runtime.GOOS == "darwin" {
-		if err := setupColimaEnv(); err != nil {
+		if err := setupDarwinEnv(); err != nil {
 			return nil, err
 		}
 	}
@@ -34,7 +34,8 @@ func CreateDokkuContainer(ctx context.Context, withLogs bool) (*DokkuContainer, 
 	}
 
 	req := testcontainers.ContainerRequest{
-		Image:        testingImage,
+		Image: testingImage,
+		// FromDockerfile: testcontainers.FromDockerfile{Context: "./internal/testutils", Dockerfile: "Dockerfile"},
 		ExposedPorts: []string{"22/tcp", "80/tcp", "443/tcp"},
 		Mounts:       mounts,
 		WaitingFor:   wait.ForListeningPort("22").WithStartupTimeout(30 * time.Second),
@@ -70,22 +71,41 @@ func CreateDokkuContainer(ctx context.Context, withLogs bool) (*DokkuContainer, 
 		return nil, maybeTerminateContainerAfterError(ctx, container, err)
 	}
 
-	dc := &DokkuContainer{
-		Container: container,
-		Host:      host,
-		SSHPort:   mappedSSHPort.Port(),
+	rootKeyPair, err := GenerateRSAKeyPair()
+	if err != nil {
+		return nil, maybeTerminateContainerAfterError(ctx, container, err)
 	}
+
+	dc := &DokkuContainer{
+		Container:      container,
+		Host:           host,
+		SSHPort:        mappedSSHPort.Port(),
+		RootPublicKey:  rootKeyPair.PublicKey,
+		RootPrivateKey: rootKeyPair.PrivateKey,
+	}
+	dc.RegisterRootAuthorizedKey(ctx)
+
+	// dc.ConfigureSSHD(ctx)
+	// reader, err := dc.CopyFileFromContainer(ctx, "/etc/ssh/sshd_config")
+	// if err != nil {
+	// 	return nil, maybeTerminateContainerAfterError(ctx, container, err)
+	// }
+	// defer reader.Close()
+	// scanner := bufio.NewScanner(reader)
+	// for scanner.Scan() {
+	// 	line := scanner.Text()
+	// 	if strings.Contains(line, "PermitRootLogin") {
+	// 		fmt.Println(line)
+	// 	}
+	// }
+	// dc.RestartSSHD(ctx)
 
 	return dc, nil
 }
 
-func setupColimaEnv() error {
-	home, err := os.UserHomeDir()
-	if err != nil {
-		return err
-	}
+func setupDarwinEnv() error {
 
-	localDockerSocketFile := path.Join(home, ".colima/docker.sock")
+	localDockerSocketFile := "/var/run/docker.sock"
 	localDockerSocketURI := fmt.Sprintf("unix://%s", localDockerSocketFile)
 
 	if err := os.Setenv("DOCKER_HOST", localDockerSocketURI); err != nil {
