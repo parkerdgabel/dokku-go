@@ -40,6 +40,7 @@ type SSHClientConfig struct {
 
 type sshExecutor struct {
 	conn *ssh.Client
+	User string
 }
 
 var (
@@ -122,6 +123,7 @@ func NewSSHClient(cfg *SSHClientConfig) (*SSHClient, error) {
 		BaseClient: BaseClient{
 			executor: &sshExecutor{
 				conn: sshConn,
+				User: user,
 			},
 		},
 	}
@@ -139,6 +141,10 @@ func (c *SSHClient) Close() error {
 
 func (e *sshExecutor) exec(cmd string, input io.Reader) (string, error) {
 	session, err := e.conn.NewSession()
+	if e.User == SshRootUser {
+		cmd = fmt.Sprintf("dokku %s", cmd)
+
+	}
 	if err != nil {
 		return "", err
 	}

@@ -29,7 +29,7 @@ func (s *dokkuTestSuite) SetupSuite() {
 		s.T().Fatal("Failed to create dokku container: ", err)
 	}
 
-	if err := s.CreateTestClient(ctx, false); err != nil {
+	if err := s.CreateTestClient(ctx, true); err != nil {
 		s.T().Fatal("Failed to create default dokku client: ", err)
 	}
 
@@ -114,7 +114,7 @@ func (s *dokkuTestSuite) CreateTestClient(ctx context.Context, admin bool) error
 		// }
 		user = "root"
 		privateKey = s.Dokku.RootPrivateKey
-		s.Dokku.RegisterPublicKey(ctx, s.Dokku.RootPublicKey, "admin")
+		s.Dokku.RegisterRootPublicKey(ctx, s.Dokku.RootPublicKey)
 	} else if err := s.Dokku.RegisterPublicKey(ctx, keyPair.PublicKey, keyName); err != nil {
 		return err
 	}

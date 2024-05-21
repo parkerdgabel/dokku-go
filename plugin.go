@@ -20,7 +20,7 @@ type pluginManager interface {
 
 		TriggerPluginHook(hookArgs []string) error
 	*/
-
+	InstallPlugin(options PluginInstallOptions) error
 	ListPlugins() ([]PluginInfo, error)
 }
 

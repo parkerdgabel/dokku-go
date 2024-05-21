@@ -158,6 +158,23 @@ func (dc *DokkuContainer) RegisterRootAuthorizedKey(ctx context.Context) error {
 	return nil
 }
 
+func (dc *DokkuContainer) RegisterRootPublicKey(ctx context.Context, key []byte) error {
+	err := dc.CopyToContainer(ctx, key, testKeyPath, testKeyFileMode)
+	if err != nil {
+		return err
+	}
+
+	chownCmd := []string{"sudo", "/usr/bin/dokku", "ssh-keys:add", "admin", testKeyPath}
+	retCode, err := dc.Exec(ctx, chownCmd)
+	if err != nil {
+		return fmt.Errorf("failed to add ssh key: %w", err)
+	} else if retCode != 0 {
+		return fmt.Errorf("failed to add ssh key: got exit code %d", retCode)
+	}
+
+	return nil
+}
+
 func (dc *DokkuContainer) RegisterPublicKey(ctx context.Context, key []byte, name string) error {
 	err := dc.CopyToContainer(ctx, key, testKeyPath, testKeyFileMode)
 	if err != nil {
