@@ -141,7 +141,7 @@ func (c *SSHClient) Close() error {
 
 func (e *sshExecutor) exec(cmd string, input io.Reader) (string, error) {
 	session, err := e.conn.NewSession()
-	if e.User == SshRootUser {
+	if e.User != SshDokkuUser {
 		cmd = fmt.Sprintf("dokku %s", cmd)
 
 	}

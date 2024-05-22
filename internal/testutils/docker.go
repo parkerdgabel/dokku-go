@@ -1,7 +1,6 @@
 package testutils
 
 import (
-	"bufio"
 	"bytes"
 	"context"
 	"fmt"
@@ -54,16 +53,16 @@ func CreateDokkuContainer(ctx context.Context, withLogs bool) (*DokkuContainer, 
 		Mounts:       mounts,
 		WaitingFor:   wait.ForListeningPort("22").WithStartupTimeout(30 * time.Second),
 	}
-	privateKeyBytes := encodePrivateKeyToPEM(rootKeyPair.PrivateKey)
+	// privateKeyBytes := encodePrivateKeyToPEM(rootKeyPair.PrivateKey)
 
-	if err != nil {
-		return nil, fmt.Errorf("failed to marshal private key: %w", err)
-	}
-	reader := bytes.NewReader(privateKeyBytes)
-	scanner := bufio.NewScanner(reader)
-	for scanner.Scan() {
-		fmt.Println(scanner.Text())
-	}
+	// if err != nil {
+	// 	return nil, fmt.Errorf("failed to marshal private key: %w", err)
+	// }
+	// reader := bytes.NewReader(privateKeyBytes)
+	// scanner := bufio.NewScanner(reader)
+	// for scanner.Scan() {
+	// 	fmt.Println(scanner.Text())
+	// }
 
 	var logger testcontainers.Logging
 	if !withLogs {
