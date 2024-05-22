@@ -7,20 +7,18 @@ import (
 )
 
 type pluginManager interface {
-	/*
-		EnablePlugin(plugin string) error
-		DisablePlugin(plugin string) error
+	EnablePlugin(plugin string) error
+	DisablePlugin(plugin string) error
 
-		CheckPluginInstalled(plugin string) (bool, error)
-		InstallPlugin(options PluginInstallOptions) error
-		InstallPluginDependencies() error
-		UninstallPlugin(plugin string) error
-		UpdatePlugin(plugin string) error
-		UpdatePlugins() error
-
-		TriggerPluginHook(hookArgs []string) error
-	*/
+	CheckPluginInstalled(plugin string) (bool, error)
 	InstallPlugin(options PluginInstallOptions) error
+	InstallPluginDependencies() error
+	UninstallPlugin(plugin string) error
+	UpdatePlugin(plugin string) error
+	UpdatePlugins() error
+
+	TriggerPluginHook(hookArgs []string) error
+
 	ListPlugins() ([]PluginInfo, error)
 }
 
@@ -98,7 +96,6 @@ func (c *BaseClient) InstallPlugin(options PluginInstallOptions) error {
 	}
 }
 
-/*
 func (c *BaseClient) CheckPluginInstalled(plugin string) (bool, error) {
 	cmd := fmt.Sprintf(pluginEnableCmd, plugin)
 	out, err := c.Exec(cmd)
@@ -116,11 +113,6 @@ func (c *BaseClient) DisablePlugin(plugin string) error {
 	cmd := fmt.Sprintf(pluginDisableCmd, plugin)
 	_, err := c.Exec(cmd)
 	return err
-}
-
-func (c *BaseClient) InstallPlugin(options PluginInstallOptions) error {
-	//TODO implement me
-	panic("implement me")
 }
 
 func (c *BaseClient) InstallPluginDependencies() error {
@@ -149,4 +141,3 @@ func (c *BaseClient) TriggerPluginHook(hookArgs []string) error {
 	//TODO implement me
 	panic("implement me")
 }
-*/
