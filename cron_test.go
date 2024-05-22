@@ -1,8 +1,9 @@
 package dokku
 
 import (
-	"github.com/stretchr/testify/suite"
 	"testing"
+
+	"github.com/stretchr/testify/suite"
 )
 
 type cronManagerTestSuite struct {
@@ -14,7 +15,7 @@ func TestRunCronManagerTestSuite(t *testing.T) {
 }
 
 func (s *cronManagerTestSuite) TestCronOutputParse() {
-	r := s.Require()
+	r := s.Suite.Require()
 
 	output := `ID                                    Schedule   Command
 cGhwPT09cGhwIHRlc3QucGhwPT09QGRhaWx5  @daily     node index.js

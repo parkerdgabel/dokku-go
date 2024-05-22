@@ -1,10 +1,11 @@
 package dokku
 
 import (
-	"github.com/stretchr/testify/suite"
 	"io/ioutil"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/suite"
 )
 
 type dokkuClientTestSuite struct {
@@ -16,7 +17,7 @@ func TestRunDokkuClientTestSuite(t *testing.T) {
 }
 
 func (s *checksManagerTestSuite) TestSSHClientExecStreaming() {
-	r := s.Require()
+	r := s.Suite.Require()
 	stream, err := s.Client.ExecStreaming("version")
 	r.NoError(err)
 	output, err := ioutil.ReadAll(stream.Stdout)
@@ -25,7 +26,7 @@ func (s *checksManagerTestSuite) TestSSHClientExecStreaming() {
 }
 
 func (s *checksManagerTestSuite) TestSSHClientExecStreamingError() {
-	r := s.Require()
+	r := s.Suite.Require()
 	stream, err := s.Client.ExecStreaming("bad command")
 	r.NoError(err)
 	r.NoError(stream.Error)

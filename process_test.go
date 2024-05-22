@@ -1,8 +1,9 @@
 package dokku
 
 import (
-	"github.com/stretchr/testify/suite"
 	"testing"
+
+	"github.com/stretchr/testify/suite"
 )
 
 type processManagerTestSuite struct {
@@ -14,7 +15,7 @@ func TestRunProcessManagerTestSuite(t *testing.T) {
 }
 
 func (s *processManagerTestSuite) TestGetProcessInfo() {
-	r := s.Require()
+	r := s.Suite.Require()
 	var err error
 
 	testAppName := "test-process-app"
@@ -27,7 +28,7 @@ func (s *processManagerTestSuite) TestGetProcessInfo() {
 }
 
 func (s *processManagerTestSuite) TestGetProcessReport() {
-	r := s.Require()
+	r := s.Suite.Require()
 	var err error
 
 	testAppName := "test-process-app"
@@ -45,7 +46,7 @@ func (s *processManagerTestSuite) TestGetProcessReport() {
 }
 
 func (s *processManagerTestSuite) TestGetProcessScale() {
-	r := s.Require()
+	r := s.Suite.Require()
 	var err error
 
 	testAppName := "test-process-app"
@@ -60,7 +61,7 @@ func (s *processManagerTestSuite) TestGetProcessScale() {
 }
 
 func (s *processManagerTestSuite) TestSetProcessScale() {
-	r := s.Require()
+	r := s.Suite.Require()
 	var err error
 
 	testAppName := "test-process-app"

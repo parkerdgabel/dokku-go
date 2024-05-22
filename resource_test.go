@@ -1,8 +1,9 @@
 package dokku
 
 import (
-	"github.com/stretchr/testify/suite"
 	"testing"
+
+	"github.com/stretchr/testify/suite"
 )
 
 type resourceManagerTestSuite struct {
@@ -14,7 +15,7 @@ func TestRunResourceManagerTestSuite(t *testing.T) {
 }
 
 func (s *resourceManagerTestSuite) TestManageAppResources() {
-	r := s.Require()
+	r := s.Suite.Require()
 	var err error
 
 	var (
@@ -49,7 +50,7 @@ func (s *resourceManagerTestSuite) TestManageAppResources() {
 }
 
 func (s *resourceManagerTestSuite) TestManageAppProcessResources() {
-	r := s.Require()
+	r := s.Suite.Require()
 	var err error
 
 	var (

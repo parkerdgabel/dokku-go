@@ -2,8 +2,9 @@ package dokku
 
 import (
 	"fmt"
-	"github.com/stretchr/testify/suite"
 	"testing"
+
+	"github.com/stretchr/testify/suite"
 )
 
 type configManagerTestSuite struct {
@@ -19,7 +20,7 @@ func TestRunConfigManagerTestSuite(t *testing.T) {
 }
 
 func (s *configManagerTestSuite) TestManageAppConfig() {
-	r := s.Require()
+	r := s.Suite.Require()
 
 	testApp := "test-config-app"
 	r.NoError(s.Client.CreateApp(testApp))
@@ -55,7 +56,7 @@ func (s *configManagerTestSuite) TestManageAppConfig() {
 }
 
 func (s *configManagerTestSuite) TestManageGlobalConfig() {
-	r := s.Require()
+	r := s.Suite.Require()
 
 	key := "key"
 	value := "value"

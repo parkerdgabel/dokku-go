@@ -21,7 +21,7 @@ func TestRunGitManagerTestSuite(t *testing.T) {
 }
 
 func (s *gitManagerTestSuite) TestGitReport() {
-	r := s.Require()
+	r := s.Suite.Require()
 	var err error
 
 	report, err := s.Client.GitGetAppReport(s.DefaultAppName)
@@ -30,7 +30,7 @@ func (s *gitManagerTestSuite) TestGitReport() {
 }
 
 func (s *gitManagerTestSuite) TestSyncGitRepo() {
-	r := s.Require()
+	r := s.Suite.Require()
 	var err error
 
 	//ctx, _ := context.WithTimeout(context.Background(), time.Second*30)

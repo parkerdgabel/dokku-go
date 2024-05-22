@@ -22,7 +22,7 @@ func setupLetsEncryptPlugin(dc *testutils.DokkuContainer) error {
 
 	lePluginURL := "https://github.com/dokku/dokku-letsencrypt.git"
 	cmd := []string{"dokku", "plugin:install", lePluginURL}
-	code, err := dc.Exec(ctx, cmd)
+	code, _, err := dc.Exec(ctx, cmd)
 	if err != nil {
 		return fmt.Errorf("failed to install letsencrypt plugin: %s", err)
 	}

@@ -1,8 +1,9 @@
 package dokku
 
 import (
-	"github.com/stretchr/testify/suite"
 	"testing"
+
+	"github.com/stretchr/testify/suite"
 )
 
 type sshKeysManagerTestSuite struct {
@@ -33,7 +34,7 @@ func (s *sshKeysManagerTestSuite) GrantAdminPrivileges() error {
 }
 
 func (s *sshKeysManagerTestSuite) TestAddSSHKey() {
-	r := s.Require()
+	r := s.Suite.Require()
 
 	r.NoError(s.GrantAdminPrivileges())
 
@@ -45,7 +46,7 @@ func (s *sshKeysManagerTestSuite) TestAddSSHKey() {
 */
 
 func (s *sshKeysManagerTestSuite) TestListSSHKeys() {
-	r := s.Require()
+	r := s.Suite.Require()
 
 	keys, err := s.Client.ListSSHKeys()
 	r.NoError(err)

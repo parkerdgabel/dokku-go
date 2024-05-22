@@ -1,8 +1,9 @@
 package dokku
 
 import (
-	"github.com/stretchr/testify/suite"
 	"testing"
+
+	"github.com/stretchr/testify/suite"
 )
 
 type checksManagerTestSuite struct {
@@ -14,7 +15,7 @@ func TestRunChecksManagerTestSuite(t *testing.T) {
 }
 
 func (s *checksManagerTestSuite) TestGetChecksReport() {
-	r := s.Require()
+	r := s.Suite.Require()
 
 	testAppName := "test-deploy-app"
 	r.NoError(s.Client.CreateApp(testAppName), "failed to create app")

@@ -1,8 +1,9 @@
 package dokku
 
 import (
-	"github.com/stretchr/testify/suite"
 	"testing"
+
+	"github.com/stretchr/testify/suite"
 )
 
 type nginxManagerTestSuite struct {
@@ -14,7 +15,7 @@ func TestRunNginxManagerTestSuite(t *testing.T) {
 }
 
 func (s *nginxManagerTestSuite) TestGetAppConfig() {
-	r := s.Require()
+	r := s.Suite.Require()
 
 	testApp := "test-nginx-app"
 	r.NoError(s.Client.CreateApp(testApp))

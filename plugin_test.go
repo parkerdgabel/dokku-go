@@ -15,7 +15,7 @@ func TestRunPluginManagerTestSuite(t *testing.T) {
 }
 
 func (s *pluginManagerTestSuite) TestListPlugins() {
-	r := s.Require()
+	r := s.Suite.Require()
 
 	plugins, err := s.Client.ListPlugins()
 	r.NoError(err)
@@ -24,7 +24,7 @@ func (s *pluginManagerTestSuite) TestListPlugins() {
 }
 
 func (s *pluginManagerTestSuite) TestInstallPlugin() {
-	r := s.Require()
+	r := s.Suite.Require()
 
 	// pluginName := "test-plugin"
 	pluginURL := "https://github.com/dokku/dokku-mysql.git"

@@ -20,7 +20,7 @@ func TestRunDomainsManagerTestSuite(t *testing.T) {
 }
 
 func (s *domainsManagerTestSuite) TestGetAppDomains() {
-	r := s.Require()
+	r := s.Suite.Require()
 
 	testAppName := "test-domains-app"
 	r.NoError(s.Client.CreateApp(testAppName))
@@ -42,7 +42,7 @@ func (s *domainsManagerTestSuite) TestGetAppDomains() {
 }
 
 func (s *domainsManagerTestSuite) TestListNoAppDomains() {
-	r := s.Require()
+	r := s.Suite.Require()
 
 	testAppName := "test-domains-app"
 	r.NoError(s.Client.CreateApp(testAppName))

@@ -108,14 +108,16 @@ func (s *dokkuTestSuite) CreateTestClient(ctx context.Context, admin bool) error
 	keyName := "test"
 	user := "dokku"
 	privateKey := keyPair.PrivateKey
+	publicKey := keyPair.PublicKey
 	if admin {
-		// if err := s.Dokku.RegisterRootPublicKey(ctx, keyPair.PublicKey); err != nil {
-		// 	return err
-		// }
 		user = "root"
+		keyName = "admin"
 		privateKey = s.Dokku.RootPrivateKey
-		s.Dokku.RegisterRootPublicKey(ctx, s.Dokku.RootPublicKey)
-	} else if err := s.Dokku.RegisterPublicKey(ctx, keyPair.PublicKey, keyName); err != nil {
+		err = s.Dokku.RegisterRootPublicKey(ctx)
+		if err != nil {
+			return err
+		}
+	} else if err := s.Dokku.RegisterPublicKey(ctx, publicKey, keyName); err != nil {
 		return err
 	}
 

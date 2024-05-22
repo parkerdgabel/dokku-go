@@ -1,8 +1,9 @@
 package dokku
 
 import (
-	"github.com/stretchr/testify/suite"
 	"testing"
+
+	"github.com/stretchr/testify/suite"
 )
 
 type appManagerTestSuite struct {
@@ -14,7 +15,7 @@ func TestRunAppManagerTestSuite(t *testing.T) {
 }
 
 func (s *appManagerTestSuite) TestManagementOptionsFlags() {
-	r := s.Require()
+	r := s.Suite.Require()
 
 	opts := AppManagementOptions{}
 	r.Equal("", opts.asFlags())
@@ -25,12 +26,12 @@ func (s *appManagerTestSuite) TestManagementOptionsFlags() {
 }
 
 func (s *appManagerTestSuite) TestCreate() {
-	s.Require().NoError(
+	s.Suite.Require().NoError(
 		s.Client.CreateApp("test-create-app"))
 }
 
 func (s *appManagerTestSuite) TestDestroy() {
-	r := s.Require()
+	r := s.Suite.Require()
 
 	testAppName := "test-manage-app"
 
@@ -46,7 +47,7 @@ func (s *appManagerTestSuite) TestDestroy() {
 }
 
 func (s *appManagerTestSuite) TestDuplicateName() {
-	r := s.Require()
+	r := s.Suite.Require()
 
 	testAppName := "test-duplicate-app"
 	err := s.Client.CreateApp(testAppName)
@@ -57,7 +58,7 @@ func (s *appManagerTestSuite) TestDuplicateName() {
 }
 
 func (s *appManagerTestSuite) TestNoAppsError() {
-	r := s.Require()
+	r := s.Suite.Require()
 	var err error
 
 	_, err = s.Client.GetAllAppReport()
@@ -66,7 +67,7 @@ func (s *appManagerTestSuite) TestNoAppsError() {
 }
 
 func (s *appManagerTestSuite) TestGetAppReport() {
-	r := s.Require()
+	r := s.Suite.Require()
 	var err error
 
 	testAppName := "test-app-info"

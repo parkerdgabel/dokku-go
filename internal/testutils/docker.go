@@ -1,6 +1,7 @@
 package testutils
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"os"
@@ -33,9 +34,21 @@ func CreateDokkuContainer(ctx context.Context, withLogs bool) (*DokkuContainer, 
 		testcontainers.VolumeMount("dokku-ssl", "/mnt/dokku/etc/nginx"),
 	}
 
+	rootKeyPair, err := GenerateRSAKeyPair()
+	if err != nil {
+		return nil, fmt.Errorf("failed to generate root key pair: %w", err)
+	}
+
 	req := testcontainers.ContainerRequest{
 		Image: testingImage,
 		// FromDockerfile: testcontainers.FromDockerfile{Context: "./internal/testutils", Dockerfile: "Dockerfile"},
+		Files: []testcontainers.ContainerFile{
+			{
+				Reader:            bytes.NewReader(rootKeyPair.PublicKey),
+				ContainerFilePath: "/root/.ssh/authorized_keys",
+				FileMode:          0666,
+			},
+		},
 		ExposedPorts: []string{"22/tcp", "80/tcp", "443/tcp"},
 		Mounts:       mounts,
 		WaitingFor:   wait.ForListeningPort("22").WithStartupTimeout(30 * time.Second),
@@ -71,11 +84,6 @@ func CreateDokkuContainer(ctx context.Context, withLogs bool) (*DokkuContainer, 
 		return nil, maybeTerminateContainerAfterError(ctx, container, err)
 	}
 
-	rootKeyPair, err := GenerateRSAKeyPair()
-	if err != nil {
-		return nil, maybeTerminateContainerAfterError(ctx, container, err)
-	}
-
 	dc := &DokkuContainer{
 		Container:      container,
 		Host:           host,
@@ -83,22 +91,6 @@ func CreateDokkuContainer(ctx context.Context, withLogs bool) (*DokkuContainer, 
 		RootPublicKey:  rootKeyPair.PublicKey,
 		RootPrivateKey: rootKeyPair.PrivateKey,
 	}
-	dc.RegisterRootAuthorizedKey(ctx)
-
-	// dc.ConfigureSSHD(ctx)
-	// reader, err := dc.CopyFileFromContainer(ctx, "/etc/ssh/sshd_config")
-	// if err != nil {
-	// 	return nil, maybeTerminateContainerAfterError(ctx, container, err)
-	// }
-	// defer reader.Close()
-	// scanner := bufio.NewScanner(reader)
-	// for scanner.Scan() {
-	// 	line := scanner.Text()
-	// 	if strings.Contains(line, "PermitRootLogin") {
-	// 		fmt.Println(line)
-	// 	}
-	// }
-	// dc.RestartSSHD(ctx)
 
 	return dc, nil
 }
@@ -119,14 +111,14 @@ func setupDarwinEnv() error {
 }
 
 func ensureMatchingDockerGroupId(ctx context.Context, container testcontainers.Container) error {
-	exitCode, err := container.Exec(ctx, []string{"groupmod", "-g", "99", "systemd-timesync"})
+	exitCode, _, err := container.Exec(ctx, []string{"groupmod", "-g", "99", "systemd-timesync"})
 	if exitCode != 0 {
 		return fmt.Errorf("failed to change gid of containerized systemd-timesync group, got exit code %d\n", exitCode)
 	} else if err != nil {
 		return err
 	}
 
-	exitCode, err = container.Exec(ctx, []string{"groupmod", "-g", "101", "docker"})
+	exitCode, _, err = container.Exec(ctx, []string{"groupmod", "-g", "101", "docker"})
 	if exitCode != 0 {
 		return fmt.Errorf("failed to change gid of containerized docker group, got exit code %d\n", exitCode)
 	}

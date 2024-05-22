@@ -1,9 +1,10 @@
 package dokku
 
 import (
-	"github.com/stretchr/testify/suite"
 	"io/ioutil"
 	"testing"
+
+	"github.com/stretchr/testify/suite"
 )
 
 type logsManagerTestSuite struct {
@@ -15,7 +16,7 @@ func TestRunLogsManagerTestSuite(t *testing.T) {
 }
 
 func (s *logsManagerTestSuite) TestGetEventLogs() {
-	r := s.Require()
+	r := s.Suite.Require()
 	var err error
 
 	testAppName := "test-process-app"
@@ -40,7 +41,7 @@ func (s *logsManagerTestSuite) TestGetEventLogs() {
 }
 
 func (s *logsManagerTestSuite) TestGetAppLogs() {
-	r := s.Require()
+	r := s.Suite.Require()
 	var err error
 
 	testAppName := "test-logs-app"
@@ -52,7 +53,7 @@ func (s *logsManagerTestSuite) TestGetAppLogs() {
 }
 
 func (s *logsManagerTestSuite) TestTailAppLogs() {
-	r := s.Require()
+	r := s.Suite.Require()
 	var err error
 
 	testAppName := "test-logs-app"
