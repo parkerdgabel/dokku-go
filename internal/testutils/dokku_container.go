@@ -88,6 +88,20 @@ func (dc *DokkuContainer) HostKeyFunc() func(string, net.Addr, ssh.PublicKey) er
 	}
 }
 
+func (dc *DokkuContainer) ConfigureSSHD(ctx context.Context) error {
+	if _, _, err := dc.Exec(ctx, []string{"sed", "-i", "s/\\#PermitRootLogin yes/PermitRootLogin prohibit-password/", "/etc/ssh/sshd_config"}); err != nil {
+		return fmt.Errorf("failed to configure sshd: %w", err)
+	}
+	return nil
+}
+
+func (dc *DokkuContainer) RestartSSHD(ctx context.Context) error {
+	if _, _, err := dc.Exec(ctx, []string{"service", "ssh", "restart"}); err != nil {
+		return fmt.Errorf("failed to start sshd: %w", err)
+	}
+	return nil
+}
+
 func (dc *DokkuContainer) RegisterRootPublicKey(ctx context.Context) error {
 	// err := dc.CopyToContainer(ctx, key, testKeyPath, testKeyFileMode)
 	// if err != nil {

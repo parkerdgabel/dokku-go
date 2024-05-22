@@ -1,6 +1,7 @@
 package testutils
 
 import (
+	"bufio"
 	"bytes"
 	"context"
 	"fmt"
@@ -46,12 +47,22 @@ func CreateDokkuContainer(ctx context.Context, withLogs bool) (*DokkuContainer, 
 			{
 				Reader:            bytes.NewReader(rootKeyPair.PublicKey),
 				ContainerFilePath: "/root/.ssh/authorized_keys",
-				FileMode:          0666,
+				FileMode:          0600,
 			},
 		},
 		ExposedPorts: []string{"22/tcp", "80/tcp", "443/tcp"},
 		Mounts:       mounts,
 		WaitingFor:   wait.ForListeningPort("22").WithStartupTimeout(30 * time.Second),
+	}
+	privateKeyBytes := encodePrivateKeyToPEM(rootKeyPair.PrivateKey)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal private key: %w", err)
+	}
+	reader := bytes.NewReader(privateKeyBytes)
+	scanner := bufio.NewScanner(reader)
+	for scanner.Scan() {
+		fmt.Println(scanner.Text())
 	}
 
 	var logger testcontainers.Logging
@@ -92,6 +103,13 @@ func CreateDokkuContainer(ctx context.Context, withLogs bool) (*DokkuContainer, 
 		RootPrivateKey: rootKeyPair.PrivateKey,
 	}
 
+	if err = dc.ConfigureSSHD(ctx); err != nil {
+		return nil, maybeTerminateContainerAfterError(ctx, container, err)
+	}
+
+	if err = dc.RestartSSHD(ctx); err != nil {
+		return nil, maybeTerminateContainerAfterError(ctx, container, err)
+	}
 	return dc, nil
 }
 
