@@ -68,29 +68,29 @@ func (c *BaseClient) ListPlugins() ([]PluginInfo, error) {
 }
 
 type PluginInstallOptions struct {
-	url        string `dokku:"plugin-url"`
-	committish string `dokku:"committish"`
-	name       string `dokku:"plugin-name"`
+	Url        string `dokku:"plugin-url"`
+	Committish string `dokku:"committish"`
+	Name       string `dokku:"plugin-name"`
 }
 
 func (c *BaseClient) InstallPlugin(options PluginInstallOptions) error {
-	if options.url == "" {
+	if options.Url == "" {
 		return fmt.Errorf("plugin url is required")
 	}
-	if strings.HasPrefix(options.url, "git@") && options.committish != "" {
-		cmd := fmt.Sprintf(pluginInstallGitCmd, options.url, options.committish)
+	if strings.HasPrefix(options.Url, "git@") && options.Committish != "" {
+		cmd := fmt.Sprintf(pluginInstallGitCmd, options.Url, options.Committish)
 		_, err := c.Exec(cmd)
 		return err
-	} else if options.committish != "" && options.name != "" {
-		cmd := fmt.Sprintf(pluginInstallFullCmd, options.url, options.committish, options.name)
+	} else if options.Committish != "" && options.Name != "" {
+		cmd := fmt.Sprintf(pluginInstallFullCmd, options.Url, options.Committish, options.Name)
 		_, err := c.Exec(cmd)
 		return err
-	} else if options.name != "" {
-		cmd := fmt.Sprintf(pluginInstallWithNameCmd, options.url, options.name)
+	} else if options.Name != "" {
+		cmd := fmt.Sprintf(pluginInstallWithNameCmd, options.Url, options.Name)
 		_, err := c.Exec(cmd)
 		return err
 	} else {
-		cmd := fmt.Sprintf(pluginInstallCmd, options.url)
+		cmd := fmt.Sprintf(pluginInstallCmd, options.Url)
 		_, err := c.Exec(cmd)
 		return err
 	}

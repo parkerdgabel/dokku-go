@@ -28,6 +28,6 @@ func (s *pluginManagerTestSuite) TestInstallPlugin() {
 
 	// pluginName := "test-plugin"
 	pluginURL := "https://github.com/dokku/dokku-mysql.git"
-	err := s.Client.InstallPlugin(PluginInstallOptions{url: pluginURL})
+	err := s.Client.InstallPlugin(PluginInstallOptions{Url: pluginURL})
 	r.NoError(err)
 }
